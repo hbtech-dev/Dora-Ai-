@@ -123,3 +123,27 @@ body {
   0% { background-position: -200% 0; }
   100% { background-position: 200% 0; }
 }
+
+@keyframes chat-scroll {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(-50%); }
+}
+
+@keyframes chat-pop {
+  0% { transform: scale(0.9) translateY(10px); opacity: 0; }
+  20% { transform: scale(1) translateY(0); opacity: 1; }
+  80% { transform: scale(1) translateY(0); opacity: 1; }
+  100% { transform: scale(0.9) translateY(-10px); opacity: 0; }
+}
+
+.animate-chat-scroll {
+  animation: chat-scroll 15s linear infinite;
+}
+
+.animate-chat-scroll-fast {
+  animation: chat-scroll 3s linear infinite;
+}
+
+.animate-chat-pop {
+  animation: chat-pop 4s ease-in-out infinite;
+}

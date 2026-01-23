@@ -7,6 +7,46 @@ interface LandingPageProps {
   onDemo: () => void;
 }
 
+const FastChat3DCard = () => {
+  const messages = [
+    { role: 'user', text: "How fast is Dora?" },
+    { role: 'bot', text: "0.4s response time." },
+    { role: 'user', text: "Handle 10k users?" },
+    { role: 'bot', text: "Easily. Scaling now." },
+    { role: 'user', text: "Neural context?" },
+    { role: 'bot', text: "Deep intent analysis." },
+  ];
+
+  return (
+    <div className="group absolute top-0 left-[2%] md:left-[5%] xl:left-[10%] w-60 h-72 glass-module rounded-[2rem] p-5 -rotate-6 animate-float hidden lg:block perspective-2000 shadow-[20px_20px_50px_rgba(0,0,0,0.5)] border border-white/20 transform-gpu preserve-3d transition-transform duration-500 hover:scale-105">
+      <div className="flex items-center justify-between mb-4 pb-2 border-b border-white/10">
+        <div className="flex items-center gap-2">
+          <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+          <span className="text-[10px] font-bold uppercase tracking-widest text-gray-400">Bot Logic active</span>
+        </div>
+        <Zap className="w-3 h-3 text-yellow-400" />
+      </div>
+      <div className="h-[calc(100%-3rem)] overflow-hidden relative">
+        <div className="animate-chat-scroll group-hover:animate-chat-scroll-fast flex flex-col gap-3 transition-all duration-300">
+          {[...messages, ...messages].map((msg, i) => (
+            <div 
+              key={i} 
+              className={`max-w-[90%] rounded-xl px-3 py-2 text-[10px] font-medium leading-tight shadow-lg ${
+                msg.role === 'user' 
+                  ? 'bg-purple-600/90 text-white self-end rounded-br-none translate-z-10' 
+                  : 'bg-white/10 border border-white/10 text-gray-200 self-start rounded-bl-none backdrop-blur-md'
+              }`}
+            >
+              {msg.text}
+            </div>
+          ))}
+        </div>
+        <div className="absolute inset-x-0 bottom-0 h-10 bg-gradient-to-t from-black/20 to-transparent pointer-events-none"></div>
+      </div>
+    </div>
+  );
+};
+
 const LandingPage: React.FC<LandingPageProps> = ({ onStart, onDemo }) => {
   const [scrollY, setScrollY] = useState(0);
   const heroRef = useRef<HTMLDivElement>(null);
@@ -84,10 +124,11 @@ const LandingPage: React.FC<LandingPageProps> = ({ onStart, onDemo }) => {
             </h1>
             
             {/* Floating 3D Icons */}
-            <div className="absolute top-0 left-[10%] w-24 h-24 bg-white/5 backdrop-blur-md border border-white/10 rounded-3xl -rotate-12 animate-float-slow hidden md:flex items-center justify-center transform hover:scale-110 transition cursor-pointer box-shadow-glow">
-                <Bot className="w-12 h-12 text-purple-400" />
+            <FastChat3DCard />
+            <div className="absolute top-5 right-[12%] w-20 h-20 bg-white/5 backdrop-blur-md border border-white/10 rounded-3xl rotate-12 animate-float-low hidden md:flex items-center justify-center transform hover:scale-110 transition cursor-pointer box-shadow-glow">
+                <Bot className="w-10 h-10 text-purple-400" />
             </div>
-            <div className="absolute bottom-10 right-[15%] w-20 h-20 bg-white/5 backdrop-blur-md border border-white/10 rounded-full rotate-12 animate-float-delayed hidden md:flex items-center justify-center transform hover:scale-110 transition cursor-pointer box-shadow-glow">
+            <div className="absolute bottom-10 right-[15%] w-20 h-20 bg-white/5 backdrop-blur-md border border-white/10 rounded-full -rotate-12 animate-float-delayed hidden md:flex items-center justify-center transform hover:scale-110 transition cursor-pointer box-shadow-glow">
                 <Cpu className="w-10 h-10 text-pink-400" />
             </div>
           </div>
