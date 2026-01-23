@@ -4,8 +4,7 @@ import { ChatMessage } from "../types";
 
 // PRO-TIP: We are using the key directly here as requested, 
 // but for production, consider using environment variables (VITE_GEMINI_KEY).
-const API_KEY = "AIzaSyDV9VjmEbi1_3XAaBC1ipL4j7XwEOYJZ4U";
-const ai = new GoogleGenAI({ apiKey: API_KEY });
+const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 
 /**
  * Generates a response from the Gemini AI model using the @google/genai package.
