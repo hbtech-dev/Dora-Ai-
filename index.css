@@ -147,3 +147,12 @@ body {
 .animate-chat-pop {
   animation: chat-pop 4s ease-in-out infinite;
 }
+
+@keyframes marquee-ltr {
+  0% { transform: translateX(-50%); }
+  100% { transform: translateX(0); }
+}
+
+.animate-marquee-ltr {
+  animation: marquee-ltr 30s linear infinite;
+}
