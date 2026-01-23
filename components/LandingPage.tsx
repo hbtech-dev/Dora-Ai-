@@ -5,6 +5,7 @@ import { Sparkles, Zap, Shield, Globe, BarChart3, Code, Users, ArrowRight, Play,
 interface LandingPageProps {
   onStart: () => void;
   onDemo: () => void;
+  onPricing: () => void;
 }
 
 const FastChat3DCard = () => {
@@ -47,7 +48,7 @@ const FastChat3DCard = () => {
   );
 };
 
-const LandingPage: React.FC<LandingPageProps> = ({ onStart, onDemo }) => {
+const LandingPage: React.FC<LandingPageProps> = ({ onStart, onDemo, onPricing }) => {
   const [scrollY, setScrollY] = useState(0);
   const heroRef = useRef<HTMLDivElement>(null);
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
@@ -443,7 +444,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ onStart, onDemo }) => {
             {/* Pricing Plans Button */}
             <div className="reveal delay-500 mt-0 lg:mt-10">
                <button 
-                 onClick={onStart}
+                 onClick={onPricing}
                  className="px-8 lg:px-12 py-4 lg:py-6 bg-white/5 backdrop-blur-xl border border-white/10 rounded-full font-bold text-lg lg:text-xl hover:bg-white/10 transition-all text-white flex items-center gap-4 group"
                >
                  <span className="relative z-10 uppercase tracking-wider">View Pricing Plans</span>

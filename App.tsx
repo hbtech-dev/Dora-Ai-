@@ -17,6 +17,13 @@ const App: React.FC = () => {
   const [showMobileMenu, setShowMobileMenu] = useState(false);
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [authMode, setAuthMode] = useState<'login' | 'signup'>('login');
+  const [logoAnimating, setLogoAnimating] = useState(false);
+
+  const handleLogoClick = () => {
+    setCurrentPage('landing');
+    setLogoAnimating(true);
+    setTimeout(() => setLogoAnimating(false), 1000);
+  };
 
   const handleAuth = (email: string, name?: string) => {
     setUser({ 
@@ -62,16 +69,16 @@ const App: React.FC = () => {
         <nav className="fixed top-0 w-full z-50 bg-black/80 backdrop-blur-lg border-b border-gray-800">
           <div className="container mx-auto px-6 py-4 flex items-center justify-between">
             <div 
-              className="flex items-center space-x-3 cursor-pointer group"
-              onClick={() => setCurrentPage('landing')}
+              className={`flex items-center space-x-3 cursor-pointer group perspective-1000 ${logoAnimating ? 'animate-logo-3d' : ''}`}
+              onClick={handleLogoClick}
             >
-              <div className="relative">
+              <div className="relative preserve-3d">
                 <div className="absolute inset-0 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full blur-lg opacity-50 animate-pulse group-hover:opacity-80 transition"></div>
-                <div className="relative w-10 h-10 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center">
+                <div className="relative w-10 h-10 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center shadow-[0_0_20px_rgba(168,85,247,0.4)]">
                   <Bot className="w-6 h-6 text-white" />
                 </div>
               </div>
-              <span className="text-2xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
+              <span className="text-2xl font-black bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent tracking-tight">
                 Dora
               </span>
             </div>
@@ -118,12 +125,29 @@ const App: React.FC = () => {
       )}
 
       <main>
-        {currentPage === 'landing' && <LandingPage onStart={() => { setAuthMode('signup'); setShowAuthModal(true); }} onDemo={() => setCurrentPage('demo')} />}
-        {currentPage === 'pricing' && <PricingPage isLoggedIn={isLoggedIn} onSelect={() => isLoggedIn ? setCurrentPage('dashboard') : setShowAuthModal(true)} />}
+        {currentPage === 'landing' && (
+          <LandingPage 
+            onStart={() => { setAuthMode('signup'); setShowAuthModal(true); }} 
+            onDemo={() => setCurrentPage('demo')} 
+            onPricing={() => setCurrentPage('pricing')}
+          />
+        )}
+        {currentPage === 'pricing' && (
+          <PricingPage 
+            isLoggedIn={isLoggedIn} 
+            onSelect={() => isLoggedIn ? setCurrentPage('dashboard') : setShowAuthModal(true)} 
+          />
+        )}
         {currentPage === 'demo' && <DemoPage onGetStarted={() => setCurrentPage('pricing')} />}
         {currentPage === 'docs' && <DocsPage />}
         {currentPage === 'contact' && <ContactPage />}
-        {currentPage === 'dashboard' && isLoggedIn && user && <Dashboard user={user} onLogout={handleLogout} onUpgrade={() => setCurrentPage('pricing')} />}
+        {currentPage === 'dashboard' && isLoggedIn && user && (
+          <Dashboard 
+            user={user} 
+            onLogout={handleLogout} 
+            onUpgrade={() => setCurrentPage('pricing')} 
+          />
+        )}
       </main>
 
       {currentPage !== 'dashboard' && (
