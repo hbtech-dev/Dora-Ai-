@@ -10,6 +10,38 @@ import DocsPage from './components/DocsPage';
 import ContactPage from './components/ContactPage';
 import { Page, User } from './types';
 
+const NeuralCelebration = () => {
+  return (
+    <div className="fixed top-[40px] left-[150px] pointer-events-none z-[60]">
+      {[...Array(40)].map((_, i) => {
+        const angle = (i / 40) * Math.PI * 2;
+        const velocity = 100 + Math.random() * 300;
+        const x = Math.cos(angle) * velocity;
+        const y = Math.sin(angle) * velocity;
+        const duration = 0.5 + Math.random() * 1;
+        const size = 4 + Math.random() * 8;
+        const color = i % 2 === 0 ? '#A855F7' : '#EC4899'; // Purple or Pink
+
+        return (
+          <div
+            key={i}
+            className="absolute rounded-full animate-neural-spark"
+            style={{
+              width: `${size}px`,
+              height: `${size}px`,
+              backgroundColor: color,
+              boxShadow: `0 0 15px ${color}`,
+              '--tw-translate-x': `${x}px`,
+              '--tw-translate-y': `${y}px`,
+              '--spark-duration': `${duration}s`
+            } as any}
+          />
+        );
+      })}
+    </div>
+  );
+};
+
 const App: React.FC = () => {
   const [currentPage, setCurrentPage] = useState<Page>('landing');
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -17,12 +49,14 @@ const App: React.FC = () => {
   const [showMobileMenu, setShowMobileMenu] = useState(false);
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [authMode, setAuthMode] = useState<'login' | 'signup'>('login');
-  const [logoAnimating, setLogoAnimating] = useState(false);
+  const [showCelebration, setShowCelebration] = useState(false);
 
   const handleLogoClick = () => {
     setCurrentPage('landing');
-    setLogoAnimating(true);
-    setTimeout(() => setLogoAnimating(false), 1000);
+    setShowCelebration(true);
+    setTimeout(() => {
+      setShowCelebration(false);
+    }, 1500);
   };
 
   const handleAuth = (email: string, name?: string) => {
@@ -56,6 +90,7 @@ const App: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-black text-white selection:bg-purple-500/30">
+      {showCelebration && <NeuralCelebration />}
       {showAuthModal && (
         <AuthModal 
           mode={authMode} 
@@ -69,7 +104,7 @@ const App: React.FC = () => {
         <nav className="fixed top-0 w-full z-50 bg-black/80 backdrop-blur-lg border-b border-gray-800">
           <div className="container mx-auto px-6 py-4 flex items-center justify-between">
             <div 
-              className={`flex items-center space-x-3 cursor-pointer group perspective-1000 ${logoAnimating ? 'animate-logo-3d' : ''}`}
+              className="flex items-center space-x-3 cursor-pointer group"
               onClick={handleLogoClick}
             >
               <div className="relative preserve-3d">

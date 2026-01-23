@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect, useRef } from 'react';
-import { Sparkles, Zap, Shield, Globe, BarChart3, Code, Users, ArrowRight, Play, Cpu, Box, Layers, Bot, Star, Command, Hash, TrendingUp, Trophy, Check, UserPlus, Activity } from 'lucide-react';
+import { Sparkles, Zap, Shield, Globe, BarChart3, Code, Users, ArrowRight, Play, Cpu, Box, Layers, Bot, Star, Command, Hash, TrendingUp, Trophy, Check, UserPlus, Activity, X, Minus, RotateCcw, Maximize } from 'lucide-react';
 
 interface LandingPageProps {
   onStart: () => void;
@@ -52,6 +52,11 @@ const LandingPage: React.FC<LandingPageProps> = ({ onStart, onDemo, onPricing })
   const [scrollY, setScrollY] = useState(0);
   const heroRef = useRef<HTMLDivElement>(null);
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+  const [integrationVisible, setIntegrationVisible] = useState(true);
+  const [integrationMinimized, setIntegrationMinimized] = useState(false);
+  const [dashboardVisible, setDashboardVisible] = useState(true);
+  const [dashboardMinimized, setDashboardMinimized] = useState(false);
+  const [dashboardMaximized, setDashboardMaximized] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => setScrollY(window.scrollY);
@@ -158,25 +163,66 @@ const LandingPage: React.FC<LandingPageProps> = ({ onStart, onDemo, onPricing })
             </button>
           </div>
 
-          {/* 3D Dashboard Preview */}
-          <div className="mt-20 relative max-w-5xl mx-auto reveal delay-300 group">
-             <div className="absolute -inset-1 bg-gradient-to-r from-purple-500 to-pink-500 rounded-[2rem] blur opacity-20 group-hover:opacity-40 transition duration-1000"></div>
-             <div className="relative bg-[#0A0A0A] border border-white/10 rounded-[2rem] overflow-hidden shadow-2xl transform transition-transform duration-700 hover:scale-[1.02] hover:-translate-y-2">
-                <div className="h-12 bg-white/5 border-b border-white/10 flex items-center px-6 gap-2">
-                   <div className="w-3 h-3 rounded-full bg-red-500/50"></div>
-                   <div className="w-3 h-3 rounded-full bg-yellow-500/50"></div>
-                   <div className="w-3 h-3 rounded-full bg-green-500/50"></div>
-                   <div className="ml-4 px-4 py-1 bg-black/50 rounded-full text-xs text-gray-500 font-mono">dora.ai/dashboard</div>
-                </div>
-                <div className="relative h-[250px] md:h-[320px] overflow-hidden">
-                   <img 
-                    src="/dashboard-preview.png" 
-                    alt="Dora AI Dashboard Preview" 
-                    className="w-full h-full object-cover object-top opacity-90 group-hover:opacity-100 transition duration-700 block"
-                   />
-                   <div className="absolute inset-0 bg-gradient-to-t from-[#0A0A0A] via-transparent to-transparent"></div>
-                </div>
-             </div>
+          <div className={`relative max-w-5xl mx-auto reveal delay-300 group transition-all duration-700 ${
+            !dashboardVisible ? 'opacity-0 h-0 overflow-hidden pointer-events-none mt-0' : 
+            dashboardMinimized ? 'mt-10 scale-[0.8] lg:scale-[0.85]' : 'mt-20 scale-100'
+          }`}>
+             {dashboardVisible && (
+               <div className={`relative transition-all duration-500 ${dashboardMinimized ? 'cursor-pointer' : ''}`}
+                    onClick={() => dashboardMinimized && setDashboardMinimized(false)}>
+                 <div className="absolute -inset-1 bg-gradient-to-r from-purple-500 to-pink-500 rounded-[2rem] blur opacity-20 group-hover:opacity-40 transition duration-1000"></div>
+                 <div className={`relative bg-[#0A0A0A] border border-white/10 rounded-[2rem] overflow-hidden shadow-2xl transition-all duration-500 ${
+                   dashboardMinimized ? 'max-h-[300px]' : 'max-h-[800px]'
+                 }`}>
+                    <div className="h-12 bg-white/5 border-b border-white/10 flex items-center px-6 gap-2">
+                       <div className="flex space-x-2">
+                          <button 
+                            onClick={(e) => { e.stopPropagation(); setDashboardVisible(false); }}
+                            className="w-3 h-3 rounded-full bg-red-500/60 hover:bg-red-500 transition-colors flex items-center justify-center group/btn"
+                          >
+                            <X className="w-2 h-2 text-white" />
+                          </button>
+                          <button 
+                            onClick={(e) => { e.stopPropagation(); setDashboardMinimized(!dashboardMinimized); }}
+                            className="w-3 h-3 rounded-full bg-yellow-500/60 hover:bg-yellow-500 transition-colors flex items-center justify-center group/btn"
+                          >
+                            <Minus className="w-2 h-2 text-white" />
+                          </button>
+                          <button 
+                            onClick={(e) => { e.stopPropagation(); setDashboardMaximized(true); }}
+                            className="w-3 h-3 rounded-full bg-green-500/60 hover:bg-green-500 transition-colors flex items-center justify-center group/btn"
+                          >
+                            <Maximize className="w-2 h-2 text-white opacity-0 group-hover/btn:opacity-100 transition-opacity" />
+                          </button>
+                       </div>
+                       <div className="ml-4 px-4 py-1 bg-black/50 rounded-full text-xs text-gray-500 font-mono">dora.ai/dashboard</div>
+                    </div>
+                    <div className={`relative overflow-hidden transition-all duration-500 ${
+                      dashboardMinimized ? 'h-[200px]' : 'h-[250px] md:h-[450px]'
+                    }`}>
+                       <img 
+                        src="/dashboard-preview.png" 
+                        alt="Dora AI Dashboard Preview" 
+                        className="w-full h-full object-cover object-top opacity-90 group-hover:opacity-100 transition duration-700 block"
+                       />
+                       <div className="absolute inset-0 bg-gradient-to-t from-[#0A0A0A] via-transparent to-transparent"></div>
+                    </div>
+                 </div>
+               </div>
+             )}
+             
+             {/* Dashboard Restore Button - Only for fully closed state */}
+             {!dashboardVisible && (
+               <div className="absolute inset-0 flex items-center justify-center z-30 h-[200px]">
+                 <button 
+                   onClick={() => { setDashboardVisible(true); setDashboardMinimized(false); }}
+                   className="bg-purple-600/20 backdrop-blur-xl border border-purple-500/30 px-8 py-4 rounded-full flex items-center gap-3 hover:bg-purple-600/30 transition-all hover:scale-110 group shadow-[0_0_50px_rgba(168,85,247,0.2)]"
+                 >
+                   <RotateCcw className="w-5 h-5 text-purple-400 group-hover:rotate-180 transition-transform duration-500" />
+                   <span className="font-bold text-sm tracking-widest uppercase text-white">Restore Preview</span>
+                 </button>
+               </div>
+             )}
           </div>
         </div>
       </section>
@@ -262,45 +308,77 @@ const LandingPage: React.FC<LandingPageProps> = ({ onStart, onDemo, onPricing })
       </section>
 
       {/* Code Snippet Section */}
-      <section className="py-20 lg:py-32 px-6">
+      <section className={`transition-all duration-700 ease-in-out px-6 relative ${
+        !integrationVisible ? 'opacity-0 h-0 py-0 overflow-hidden pointer-events-none' : 
+        integrationMinimized ? 'py-10 lg:py-16 transform scale-90 lg:scale-[0.85]' : 'py-20 lg:py-32'
+      }`}>
         <div className="container mx-auto">
-          <div className="glass-panel max-w-5xl mx-auto rounded-[2rem] lg:rounded-[3rem] overflow-hidden border border-white/10 reveal">
-             <div className="grid grid-cols-1 md:grid-cols-2">
-                <div className="p-8 lg:p-20 flex flex-col justify-center">
-                   <h2 className="text-3xl lg:text-5xl font-black mb-6">Drop-in <br /><span className="text-purple-400">Integration</span></h2>
-                   <p className="text-gray-400 text-base lg:text-lg mb-8">Add Dora to your site in 30 seconds. Works with React, Vue, HTML, and more.</p>
-                   <div className="flex flex-wrap items-center gap-3">
-                      {['React', 'Vue', 'Next.js', 'WordPress'].map((tech) => (
-                         <span key={tech} className="px-4 py-2 bg-white/5 rounded-full text-[10px] lg:text-xs font-bold text-gray-400 border border-white/5">{tech}</span>
-                      ))}
-                   </div>
-                </div>
-                <div className="bg-[#050505] p-8 lg:p-12 font-mono text-[10px] lg:text-sm overflow-hidden relative group">
-                   <div className="absolute top-4 right-4 flex space-x-2">
-                      <div className="w-2 h-2 lg:w-3 lg:h-3 rounded-full bg-red-500/20"></div>
-                      <div className="w-2 h-2 lg:w-3 lg:h-3 rounded-full bg-yellow-500/20"></div>
-                   </div>
-                   <div className="text-gray-500 mb-2">// Initialize Dora AI</div>
-                   <div className="text-purple-400">import</div> <span className="text-white">{`{ Dora }`}</span> <span className="text-purple-400">from</span> <span className="text-green-400">'@dora-ai/client'</span>;
-                   <br /><br />
-                   <div className="text-purple-400">const</div> <span className="text-blue-400">bot</span> = <span className="text-purple-400">new</span> <span className="text-yellow-400">Dora</span>({`{`}
-                   <br />
-                   &nbsp;&nbsp;<span className="text-white">apiKey:</span> <span className="text-green-400">'dk_live_5928...'</span>,
-                   <br />
-                   &nbsp;&nbsp;<span className="text-white">theme:</span> <span className="text-green-400">'dark'</span>,
-                   <br />
-                   &nbsp;&nbsp;<span className="text-white">personality:</span> <span className="text-green-400">'professional'</span>
-                   <br />
-                   {`}`});
-                   <br /><br />
-                   <div className="text-gray-500">// Start conversation</div>
-                   <span className="text-blue-400">bot</span>.<span className="text-yellow-400">mount</span>(<span className="text-green-400">'#root'</span>);
+          {!integrationVisible ? null : (
+            <div className={`glass-panel max-w-5xl mx-auto rounded-[2rem] lg:rounded-[3rem] overflow-hidden border border-white/10 reveal active transition-all duration-500 ${
+              integrationMinimized ? 'max-h-[300px]' : 'max-h-[2000px]'
+            }`}>
+              <div className="grid grid-cols-1 md:grid-cols-2">
+                  <div className={`p-8 lg:p-20 flex flex-col justify-center transition-all duration-500 ${integrationMinimized ? 'opacity-40 blur-sm' : ''}`}>
+                    <h2 className="text-3xl lg:text-5xl font-black mb-6">Drop-in <br /><span className="text-purple-400">Integration</span></h2>
+                    <p className="text-gray-400 text-base lg:text-lg mb-8">Add Dora to your site in 30 seconds. Works with React, Vue, HTML, and more.</p>
+                    <div className="flex flex-wrap items-center gap-3">
+                        {['React', 'Vue', 'Next.js', 'WordPress'].map((tech) => (
+                          <span key={tech} className="px-4 py-2 bg-white/5 rounded-full text-[10px] lg:text-xs font-bold text-gray-400 border border-white/5">{tech}</span>
+                        ))}
+                    </div>
+                  </div>
+                  <div className="bg-[#050505] p-8 lg:p-12 font-mono text-[10px] lg:text-sm overflow-hidden relative group">
+                    <div className="absolute top-4 right-4 flex space-x-2 z-20">
+                        <button 
+                          onClick={() => setIntegrationVisible(false)}
+                          className="w-3 h-3 lg:w-4 lg:h-4 rounded-full bg-red-500/60 hover:bg-red-500 transition-colors flex items-center justify-center group/btn"
+                        >
+                          <X className="w-2 h-2 text-white transition-opacity" />
+                        </button>
+                        <button 
+                          onClick={() => setIntegrationMinimized(!integrationMinimized)}
+                          className="w-3 h-3 lg:w-4 lg:h-4 rounded-full bg-yellow-500/60 hover:bg-yellow-500 transition-colors flex items-center justify-center group/btn"
+                        >
+                          <Minus className="w-2 h-2 text-white transition-opacity" />
+                        </button>
+                    </div>
+                    <div className={`transition-all duration-500 ${integrationMinimized ? 'opacity-20 translate-y-10' : ''}`}>
+                      <div className="text-gray-500 mb-2">// Initialize Dora AI</div>
+                      <div className="text-purple-400">import</div> <span className="text-white">{`{ Dora }`}</span> <span className="text-purple-400">from</span> <span className="text-green-400">'@dora-ai/client'</span>;
+                      <br /><br />
+                      <div className="text-purple-400">const</div> <span className="text-blue-400">bot</span> = <span className="text-purple-400">new</span> <span className="text-yellow-400">Dora</span>({`{`}
+                      <br />
+                      &nbsp;&nbsp;<span className="text-white">apiKey:</span> <span className="text-green-400">'dk_live_5928...'</span>,
+                      <br />
+                      &nbsp;&nbsp;<span className="text-white">theme:</span> <span className="text-green-400">'dark'</span>,
+                      <br />
+                      &nbsp;&nbsp;<span className="text-white">personality:</span> <span className="text-green-400">'professional'</span>
+                      <br />
+                      {`}`});
+                      <br /><br />
+                      <div className="text-gray-500">// Start conversation</div>
+                      <span className="text-blue-400">bot</span>.<span className="text-yellow-400">mount</span>(<span className="text-green-400">'#root'</span>);
+                    </div>
 
-                   <div className="absolute bottom-0 right-0 w-64 h-64 bg-purple-500/10 blur-[80px] group-hover:bg-purple-500/20 transition duration-1000"></div>
-                </div>
-             </div>
-          </div>
+                    <div className="absolute bottom-0 right-0 w-64 h-64 bg-purple-500/10 blur-[80px] group-hover:bg-purple-500/20 transition duration-1000"></div>
+                  </div>
+              </div>
+            </div>
+          )}
         </div>
+        
+        {/* Restore Button */}
+        {(!integrationVisible || integrationMinimized) && (
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-30">
+            <button 
+              onClick={() => { setIntegrationVisible(true); setIntegrationMinimized(false); }}
+              className="bg-white/10 backdrop-blur-md border border-white/20 px-6 py-3 rounded-full flex items-center gap-3 hover:bg-white/20 transition-all hover:scale-110 group shadow-2xl"
+            >
+              <RotateCcw className="w-5 h-5 text-purple-400 group-hover:rotate-180 transition-transform duration-500" />
+              <span className="font-bold text-sm tracking-widest uppercase">Restore Integration Section</span>
+            </button>
+          </div>
+        )}
       </section>
 
       {/* CTA Section - The Visual Automation Matrix */}
@@ -468,6 +546,32 @@ const LandingPage: React.FC<LandingPageProps> = ({ onStart, onDemo, onPricing })
           ></div>
         ))}
       </section>
+      {/* Dashboard Maximize Modal */}
+      {dashboardMaximized && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 lg:p-12">
+          <div 
+            className="absolute inset-0 bg-black/95 backdrop-blur-2xl"
+            onClick={() => setDashboardMaximized(false)}
+          ></div>
+          <div className="relative w-full max-w-7xl aspect-video rounded-3xl overflow-hidden border border-white/10 shadow-[0_0_100px_rgba(168,85,247,0.3)] animate-in fade-in zoom-in duration-500">
+             <button 
+              onClick={() => setDashboardMaximized(false)}
+              className="absolute top-6 right-6 z-10 w-12 h-12 bg-black/50 backdrop-blur-md rounded-full flex items-center justify-center hover:bg-white/10 transition-colors border border-white/10 text-white"
+             >
+               <X className="w-6 h-6" />
+             </button>
+             <img 
+              src="/dashboard-preview.png" 
+              alt="Dora AI Dashboard Full Preview" 
+              className="w-full h-full object-cover object-top"
+             />
+             <div className="absolute bottom-10 left-1/2 -translate-x-1/2 px-8 py-3 bg-white/5 backdrop-blur-xl border border-white/10 rounded-full hidden md:block">
+                <p className="text-white/60 font-mono text-[10px] lg:text-sm tracking-widest uppercase">Live Production Interface — Neural Integration Active</p>
+             </div>
+          </div>
+        </div>
+      )}
+
       <footer className="border-t border-white/10 bg-black py-12 text-center text-gray-600 text-sm">
          <p>© {new Date().getFullYear()} Dora AI Inc. Designed with 💜 by HB Tech.</p>
       </footer>
