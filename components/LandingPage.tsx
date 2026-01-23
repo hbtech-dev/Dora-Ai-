@@ -391,12 +391,12 @@ const LandingPage: React.FC<LandingPageProps> = ({ onStart, onDemo }) => {
                   </div>
                </div>
 
-               {/* Connection Lines */}
-               <svg className="absolute inset-0 w-full h-full pointer-events-none z-10 opacity-40">
-                  <path d="M 50% 50% L 25% 25%" stroke="#A855F7" strokeWidth="2" strokeDasharray="15 10" fill="none" className="animate-[line-flow_10s_linear_infinite]" />
-                  <path d="M 50% 50% L 75% 25%" stroke="#A855F7" strokeWidth="2" strokeDasharray="15 10" fill="none" className="animate-[line-flow_10s_linear_infinite] [animation-delay:2s]" />
-                  <path d="M 50% 50% L 20% 85%" stroke="#A855F7" strokeWidth="2" strokeDasharray="15 10" fill="none" className="animate-[line-flow_10s_linear_infinite] [animation-delay:4s]" />
-                  <path d="M 50% 50% L 80% 85%" stroke="#A855F7" strokeWidth="2" strokeDasharray="15 10" fill="none" className="animate-[line-flow_10s_linear_infinite] [animation-delay:1s]" />
+                {/* Connection Lines */}
+               <svg className="absolute inset-0 w-full h-full pointer-events-none z-10 opacity-40" viewBox="0 0 100 100" preserveAspectRatio="none">
+                  <path d="M 50 50 L 25 25" stroke="#A855F7" strokeWidth="0.5" strokeDasharray="2 1" fill="none" className="animate-[line-flow_10s_linear_infinite]" />
+                  <path d="M 50 50 L 75 25" stroke="#A855F7" strokeWidth="0.5" strokeDasharray="2 1" fill="none" className="animate-[line-flow_10s_linear_infinite] [animation-delay:2s]" />
+                  <path d="M 50 50 L 20 85" stroke="#A855F7" strokeWidth="0.5" strokeDasharray="2 1" fill="none" className="animate-[line-flow_10s_linear_infinite] [animation-delay:4s]" />
+                  <path d="M 50 50 L 80 85" stroke="#A855F7" strokeWidth="0.5" strokeDasharray="2 1" fill="none" className="animate-[line-flow_10s_linear_infinite] [animation-delay:1s]" />
                </svg>
             </div>
 

@@ -1,22 +1,21 @@
 
-import { GoogleGenAI, GenerateContentResponse } from "@google/genai";
+import { GoogleGenAI } from "@google/genai";
 import { ChatMessage } from "../types";
 
+// PRO-TIP: We are using the key directly here as requested, 
+// but for production, consider using environment variables (VITE_GEMINI_KEY).
+const API_KEY = "AIzaSyDV9VjmEbi1_3XAaBC1ipL4j7XwEOYJZ4U";
+const ai = new GoogleGenAI({ apiKey: API_KEY });
+
 /**
- * Generates a response from the Dora AI assistant using the Gemini API.
- * Follows the latest @google/genai SDK guidelines for initialization and content generation.
+ * Generates a response from the Gemini AI model using the @google/genai package.
  */
 export const generateDoraResponse = async (history: ChatMessage[]): Promise<string> => {
   try {
-    // CRITICAL: Initialize GoogleGenAI right before the API call using process.env.API_KEY directly.
-    // The API key is assumed to be pre-configured and valid in the environment.
-    const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
-    
-    // Transform history to contents format. We extract the latest user message for this request.
+    // Extract the latest user message
     const lastUserMessage = history[history.length - 1]?.content || "Hello";
-    
-    // Use gemini-3-flash-preview for basic text tasks like this chatbot assistant.
-    const response: GenerateContentResponse = await ai.models.generateContent({
+
+    const response = await ai.models.generateContent({
       model: 'gemini-3-flash-preview',
       contents: lastUserMessage,
       config: {
@@ -26,10 +25,9 @@ export const generateDoraResponse = async (history: ChatMessage[]): Promise<stri
       },
     });
 
-    // Access the .text property directly (it is a getter, not a function) to extract the generated string.
     return response.text || "I'm sorry, I couldn't generate a response.";
   } catch (error) {
     console.error("Gemini API Error:", error);
-    return "I apologize, but I encountered an error processing your request. Please try again later.";
+    return "I apologize, but I encountered an error connecting to my neural core. Please check the API configuration.";
   }
 };

@@ -2,7 +2,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Bot, Send, Sparkles, User } from 'lucide-react';
 import { ChatMessage } from '../types';
-import { generateDoraResponse } from '../services/geminiService';
+import { generateFreeChatResponse } from '../services/chatService';
 
 interface DemoPageProps {
   onGetStarted: () => void;
@@ -12,24 +12,42 @@ const DemoPage: React.FC<DemoPageProps> = ({ onGetStarted }) => {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const chatEndRef = useRef<HTMLDivElement>(null);
+  const chatContainerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    // Initial welcome message
+    if (messages.length === 0) {
+      setMessages([
+        { role: 'assistant', content: "Hello! I'm Dora, your AI assistant. I'm connected to a live neural network right now. Go ahead and ask me anything!" }
+      ]);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (chatContainerRef.current) {
+      chatContainerRef.current.scrollTo({
+        top: chatContainerRef.current.scrollHeight,
+        behavior: 'smooth'
+      });
+    }
   }, [messages]);
 
   const handleSendMessage = async () => {
     if (!input.trim() || isLoading) return;
 
     const userMsg: ChatMessage = { role: 'user', content: input };
-    const newMessages = [...messages, userMsg];
-    setMessages(newMessages);
+    setMessages(prev => [...prev, userMsg]);
     setInput('');
     setIsLoading(true);
 
-    const response = await generateDoraResponse(newMessages);
-    setMessages(prev => [...prev, { role: 'assistant', content: response }]);
-    setIsLoading(false);
+    try {
+      const response = await generateFreeChatResponse(input);
+      setMessages(prev => [...prev, { role: 'assistant', content: response }]);
+    } catch (error) {
+      setMessages(prev => [...prev, { role: 'assistant', content: "I'm sorry, I'm having some trouble responding right now. Please try again later!" }]);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -64,7 +82,7 @@ const DemoPage: React.FC<DemoPageProps> = ({ onGetStarted }) => {
           </div>
 
           {/* Chat Messages */}
-          <div className="flex-1 overflow-y-auto p-8 space-y-6 scrollbar-hide">
+          <div ref={chatContainerRef} className="flex-1 overflow-y-auto p-8 space-y-6 scrollbar-hide">
             {messages.length === 0 && (
               <div className="h-full flex flex-col items-center justify-center text-center opacity-50 space-y-4">
                 <div className="w-20 h-20 bg-white/5 rounded-full flex items-center justify-center">
@@ -110,7 +128,6 @@ const DemoPage: React.FC<DemoPageProps> = ({ onGetStarted }) => {
                  </div>
               </div>
             )}
-            <div ref={chatEndRef} />
           </div>
 
           {/* Chat Input */}

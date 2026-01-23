@@ -9,6 +9,7 @@ import {
 } from 'lucide-react';
 import { User, StatCardProps } from '../types';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import { ChatWidget } from './ChatWidget';
 
 interface DashboardProps {
   user: User;
@@ -48,6 +49,8 @@ const StatCard: React.FC<StatCardProps> = ({ label, value, change, icon }) => (
   </div>
 );
 
+
+
 const OverviewSection: React.FC<{ user: User, copied: boolean, copyCode: () => void, onUpgrade: () => void }> = ({ user, copied, copyCode, onUpgrade }) => (
   <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
     <header className="flex flex-col md:flex-row justify-between items-start md:items-center mb-12 gap-6">
@@ -78,7 +81,7 @@ const OverviewSection: React.FC<{ user: User, copied: boolean, copyCode: () => v
             </h3>
             <p className="text-gray-400">Activity in the last 7 days</p>
           </div>
-          <select className="bg-black border border-white/20 rounded-xl px-4 py-2 text-sm text-white">
+          <select className="bg-black border border-white/20 rounded-xl px-4 py-2 text-sm text-white focus:outline-none focus:border-purple-500">
             <option>Last 7 days</option>
             <option>Last 30 days</option>
           </select>
@@ -105,54 +108,67 @@ const OverviewSection: React.FC<{ user: User, copied: boolean, copyCode: () => v
         </div>
       </div>
 
-      <div className="space-y-8">
-        <div className="bg-gradient-to-br from-purple-900/40 to-pink-900/40 border border-purple-500/30 rounded-[3rem] p-10">
-           <h3 className="text-2xl font-bold mb-4">Current Usage</h3>
-           <div className="space-y-6">
-             <div>
-               <div className="flex justify-between text-sm mb-2">
-                 <span className="text-gray-300">Messages Used</span>
-                 <span className="font-bold">8,450 / 10,000</span>
-               </div>
-               <div className="w-full bg-black/50 rounded-full h-3">
-                 <div className="bg-gradient-to-r from-purple-500 to-pink-500 h-3 rounded-full" style={{ width: '84.5%' }}></div>
-               </div>
+      <div className="bg-white/5 border border-white/10 rounded-[3rem] p-2 flex flex-col h-[500px]">
+         <div className="p-4 border-b border-white/10 mb-2">
+            <h3 className="text-xl font-bold flex items-center">
+               <Bot className="mr-2 text-purple-400 w-5 h-5" />
+               Live AI Assistant
+            </h3>
+            <p className="text-xs text-gray-500 uppercase tracking-tighter">Test your bot live here</p>
+         </div>
+         <div className="flex-1 min-h-0">
+            <ChatWidget />
+         </div>
+      </div>
+    </div>
+
+    <div className="grid lg:grid-cols-3 gap-12 mb-12">
+      <div className="bg-gradient-to-br from-purple-900/40 to-pink-900/40 border border-purple-500/30 rounded-[3rem] p-10">
+         <h3 className="text-2xl font-bold mb-4">Current Usage</h3>
+         <div className="space-y-6">
+           <div>
+             <div className="flex justify-between text-sm mb-2">
+               <span className="text-gray-300">Messages Used</span>
+               <span className="font-bold">8,450 / 10,000</span>
              </div>
-             <div className="pt-4 flex items-center justify-between">
-               <div>
-                 <div className="text-sm text-gray-400">Next billing cycle</div>
-                 <div className="font-bold">March 12, 2024</div>
-               </div>
-               <button 
-                onClick={onUpgrade}
-                className="p-3 bg-white text-black rounded-full hover:bg-purple-500 hover:text-white transition group"
-               >
-                 <ChevronRight className="w-6 h-6 group-hover:translate-x-1 transition" />
-               </button>
+             <div className="w-full bg-black/50 rounded-full h-3">
+               <div className="bg-gradient-to-r from-purple-500 to-pink-500 h-3 rounded-full" style={{ width: '84.5%' }}></div>
              </div>
            </div>
-        </div>
-
-        <div className="bg-white/5 border border-white/10 rounded-[3rem] p-10">
-           <h3 className="text-2xl font-bold mb-6 flex items-center">
-             <Code className="mr-3 text-purple-400" />
-             Integration
-           </h3>
-           <div className="relative group">
-             <div className="bg-black/50 p-6 rounded-[2rem] border border-white/10 overflow-hidden">
-               <pre className="text-xs text-purple-300 font-mono whitespace-pre-wrap break-all">
-{`<script src="https://dora-ai.com/embed.js"></script>
-<div data-dora-id="${user.email.split('@')[0]}"></div>`}
-               </pre>
+           <div className="pt-4 flex items-center justify-between">
+             <div>
+               <div className="text-sm text-gray-400">Next billing cycle</div>
+               <div className="font-bold">March 12, 2024</div>
              </div>
              <button 
-               onClick={copyCode}
-               className="absolute top-4 right-4 p-3 bg-white/10 hover:bg-white/20 rounded-2xl backdrop-blur-md transition-all"
+              onClick={onUpgrade}
+              className="p-3 bg-white text-black rounded-full hover:bg-purple-500 hover:text-white transition group"
              >
-               {copied ? <Check className="w-5 h-5 text-green-400" /> : <Copy className="w-5 h-5" />}
+               <ChevronRight className="w-6 h-6 group-hover:translate-x-1 transition" />
              </button>
            </div>
-        </div>
+         </div>
+      </div>
+
+      <div className="lg:col-span-2 bg-white/5 border border-white/10 rounded-[3rem] p-10">
+         <h3 className="text-2xl font-bold mb-6 flex items-center">
+           <Code className="mr-3 text-purple-400" />
+           Integration
+         </h3>
+         <div className="relative group">
+           <div className="bg-black/50 p-6 rounded-[2rem] border border-white/10 overflow-hidden">
+             <pre className="text-xs text-purple-300 font-mono whitespace-pre-wrap break-all">
+{`<script src="https://dora-ai.com/embed.js"></script>
+<div data-dora-id="${user.email.split('@')[0]}"></div>`}
+             </pre>
+           </div>
+           <button 
+             onClick={copyCode}
+             className="absolute top-4 right-4 p-3 bg-white/10 hover:bg-white/20 rounded-2xl backdrop-blur-md transition-all"
+           >
+             {copied ? <Check className="w-5 h-5 text-green-400" /> : <Copy className="w-5 h-5" />}
+           </button>
+         </div>
       </div>
     </div>
   </div>
